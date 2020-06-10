@@ -3,6 +3,7 @@ import json
 import logging
 import voluptuous as vol
 import homeassistant.helpers.config_validation as cv
+from homeassistant.components.sensor import PLATFORM_SCHEMA
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -16,8 +17,13 @@ CONF_TOPIC = "topic"
 DEFAULT_TOPIC = "sonoff"
 
 # validate configuration: Required CONF_TOPIC
-CONFIG_SCHEMA = vol.Schema(
-    {DOMAIN: vol.Schema({vol.Required(CONF_TOPIC): cv.string,})}, extra=vol.ALLOW_EXTRA
+# CONFIG_SCHEMA = vol.Schema(
+#     {DOMAIN: vol.Schema({vol.Required(CONF_TOPIC): cv.string,})}, extra=vol.ALLOW_EXTRA
+# )
+PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
+    {
+        vol.Optional(CONF_TOPIC, default=DEFAULT_TOPIC): cv.string
+    }
 )
 
 
@@ -27,7 +33,7 @@ class TasmotaMqtt:
 
     def __init__(self, hass, config):
         self.hass = hass
-        self.topic = config[DOMAIN].get(CONF_TOPIC, DEFAULT_TOPIC)
+        self.topic = config[CONF_TOPIC]
         self.entity_id = self.topic
 
         self.mqtt = hass.components.mqtt
@@ -84,7 +90,12 @@ class TasmotaMqtt:
 # >tasmota_sonoff_mqtt:
 # >  topic: boiler
 # then config['tasmota_sonoff_mqtt'][topic] = 'boiler'
-def setup(hass, config):
-    """Set up the Hello MQTT component."""
+# def setup(hass, config):
+#     """Set up the Hello MQTT component."""
+#     TasmotaMqtt(hass, config)
+#     return True
+
+def setup_platform(hass, config, add_entities, discovery_info=None):
+    """Set up the sensor platform."""
     TasmotaMqtt(hass, config)
     return True

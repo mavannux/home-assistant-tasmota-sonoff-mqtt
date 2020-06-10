@@ -1,0 +1,10 @@
+{
+    "domain": "tasmota_sonoff_mqtt",
+    "name": "Tasmota SonOff integration",
+    "documentation": "https://github.com/custom-components/sensor.mitemp_bt",
+    "requirements": [],
+    "dependencies": ["mqtt"],
+    "codeowners": [
+      "@vannux"
+    ]
+  }
